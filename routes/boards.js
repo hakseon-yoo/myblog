@@ -106,7 +106,7 @@ router.get('/boarddetail', async (req, res) => {
         // return res.status(400).json({ success: false, msg: 'server message : 수정할 게시물이 존재하지 않음' });
     }   
     
-    await Board.updateOne({ _id: boardId }, { $set: { title: title, regid: regid, content:content } });
+    await Board.updateOne({ _id: boardId }, { $set: { title: sanitizeTitle, regid: sanitizeRegid, content:sanitizeContent } });
     res.json({ success: true, msg: 'server message : 게시글이 수정 성공.' })
 });
 
