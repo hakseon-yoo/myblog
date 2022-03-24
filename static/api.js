@@ -68,7 +68,6 @@ function requestBoardUpdate(title, regid, password, content, boardId, callback){
 }
 
 function requestBoardDelete(boardId, password, callback){
-    alert(boardId);
     $.ajax({
         type: "DELETE",
         url: "/api/board",

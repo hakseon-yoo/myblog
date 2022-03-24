@@ -1,5 +1,6 @@
 const express = require('express');
 const connect = require('./schemas');
+const sanitizehtml = require('sanitize-html');
 require('dotenv').config();
 const app = express();
 const port = 3000;
@@ -12,7 +13,6 @@ const requestMiddleware = (req, res, next) => {
     console.log("Request URL:", req.originalUrl, " - ", new Date());
     next();
 }
-
 /**
  * html 파일과 연결시켜주는 코드인 것 같다.
  * 자동으로 index.html을 연결시켜주는 것 같다.

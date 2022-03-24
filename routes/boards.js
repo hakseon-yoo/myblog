@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const sanitizehtml = require('sanitize-html');
+
 const Board = require('../schemas/board');
 
 /**
@@ -41,14 +43,27 @@ router.get('/boarddetail', async (req, res) => {
  */
  router.post('/board', async (req, res) => {
     const {title, regid, password, content} = req.body;
+
+    // XSS공격 취약점 보완
+    const sanitizeTitle = sanitizehtml(title);
+    const sanitizeRegid = sanitizehtml(regid);
+    const sanitizePassword = sanitizehtml(password);
+    const sanitizeContent = sanitizehtml(content);
     const regdt = new Date(+new Date() + 3240 * 10000).toISOString().replace("T", " ").replace(/\..*/, '');
+
+    // 빈 값을 체크한다.
+    if(!sanitizeTitle.length) return res.json({success: false, msg:'제목이 입력되지 않았거나, 올바르지 않습니다.'});
+    if(!sanitizeRegid.length) return res.json({success: false, msg:'작성자가 입력되지 않았거나, 올바르지 않습니다.'});
+    if(!sanitizePassword.length) return res.json({success: false, msg:'패스워드가 입력되지 않았습니다.'});
+    if(!sanitizeContent.length) return res.json({success: false, msg:'글 내용이 입력되지 않았거나, 올바르지 않습니다.'});
+    
 
     //입력된 값을 받아, DB에 도큐먼트 삽입
     await Board.create({
-        title,
-        regid,
-        password,
-        content,
+        title: sanitizeTitle,
+        regid: sanitizeRegid,
+        password: sanitizePassword,
+        content: sanitizeContent,
         regdt: regdt,
     });
 
@@ -68,6 +83,18 @@ router.get('/boarddetail', async (req, res) => {
  router.put('/board', async (req, res) => {
     const {title, regid, password, content, boardId} = req.body;
     const [boarddetail] = await Board.find({_id: boardId})
+
+    // XSS공격 취약점 보완
+    const sanitizeTitle = sanitizehtml(title);
+    const sanitizeRegid = sanitizehtml(regid);
+    const sanitizePassword = sanitizehtml(password);
+    const sanitizeContent = sanitizehtml(content);
+
+    // 빈 값을 체크한다.
+    if(!sanitizeTitle.length) return res.json({success: false, msg:'제목이 입력되지 않았거나, 올바르지 않습니다.'});
+    if(!sanitizeRegid.length) return res.json({success: false, msg:'작성자가 입력되지 않았거나, 올바르지 않습니다.'});
+    if(!sanitizePassword.length) return res.json({success: false, msg:'패스워드가 입력되지 않았습니다.'});
+    if(!sanitizeContent.length) return res.json({success: false, msg:'글 내용이 입력되지 않았거나, 올바르지 않습니다.'});
 
     if(boarddetail['password'] !== password){
         return res.json({ code: false, msg: 'server message : 패스워드가 일치하지 않음' });
@@ -96,6 +123,12 @@ router.get('/boarddetail', async (req, res) => {
  router.delete('/board', async (req, res) => {
     const {boardId, password} = req.body;
     const [boarddetail] = await Board.find({_id: boardId})
+
+    // XSS공격 취약점 보완
+    const sanitizePassword = sanitizehtml(password);
+
+    // 빈 값을 체크한다.
+    if(!sanitizePassword.length) return res.json({success: false, msg:'패스워드가 입력되지 않았습니다.'});
 
     if(boarddetail['password'] !== password){
         return res.json({ code: false, msg: 'server message: 패스워드가 일치하지 않음' });
