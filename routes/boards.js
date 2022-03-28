@@ -144,4 +144,4 @@ router.get('/boarddetail', async (req, res) => {
     res.json({ success: true, msg: 'server message: 게시글 삭제 성공.' });
 });
 
-module.exports = router
+module.exports = router;

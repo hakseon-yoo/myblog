@@ -1,3 +1,69 @@
+/**
+ * 
+ */
+function requestSignUpUser(userId, nickname, password, validpassword){
+    $.ajax({
+        type: "POST",
+        url: "/api/user",
+        data: {
+            userId,
+            nickname,
+            password,
+            validpassword,
+        },
+        success: function (response) {
+            alert('회원가입을 축하드립니다.\n로그인 페이지로 이동합니다.');
+            window.location.href = '/';
+        },
+        error: function (error) {
+            alert(error.responseJSON.errorMessage);
+        },
+    });
+}
+
+function requestLogin(userId, password){
+    $.ajax({
+        type: "POST",
+        url: "/api/auth",
+        data: {
+            userId,
+            password,
+        },
+        success: function (response) {
+            localStorage.setItem("token", response.token);
+            window.location.href = '/board_list.html';
+        },
+        error: function (error) {
+            alert(error.responseJSON.errorMessage);
+        },
+    });
+}
+
+function tokenCheck(callback){
+    $.ajax({
+        type: "GET",
+        url: "/api/auth/check",
+        headers: {
+            authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        success: function (response) {
+            callback(response.user);
+        },
+        error: function (xhr, status, error) {
+            if(xhr.status == 401){
+                alert('로그인이 필요합니다.');
+                window.location.href = '/';
+            }else{
+                localStorage.clear();
+                alert('알 수 없는 에러가 발생했습니다. 관리자에게 문의하세요.');
+            }
+        },
+    });
+}
+
+
+
+
 function requestBoardList(callback) {
     $.ajax({
         type: "GET",
@@ -55,6 +121,7 @@ function requestBoardUpdate(title, regid, password, content, boardId, callback){
             password: password,
             content: content,
             boardId: boardId,
+
         },
         error: function (xhr, status, error){
             if(xhr.status == 400){

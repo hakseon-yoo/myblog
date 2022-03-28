@@ -7,6 +7,8 @@ const port = 3000;
 connect();
 
 const boardsRouter = require('./routes/boards');
+const usersRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
 
 const requestMiddleware = (req, res, next) => {
     console.log("Request URL:", req.originalUrl, " - ", new Date());
@@ -21,7 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true})); // 클라이언트에서 Ajax로 요청할 때, 얘 없으면 body를 안받아버린다;
 app.use(requestMiddleware);
 
-app.use('/api', [boardsRouter]);
+app.use('/api', [boardsRouter, usersRouter, authRouter]);
 
 // app.get('/good', async (req, res) => {
 //     const [board_list] = await Board.find({});

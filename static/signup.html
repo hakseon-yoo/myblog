@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Blog - Login</title>
+
+    <title>My Blog - Sign Up</title>
 
     <script src="https://code.jquery.com/jquery-3.5.1.js"
         integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
@@ -19,7 +20,7 @@
     <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
 
     <style>
-        .main-logo {
+        .signup-logo {
             width: 100%;
 
             display: flex;
@@ -27,8 +28,7 @@
             justify-content: center;
             align-items: center;
         }
-        .login-form {
-
+        .signup-form {
             width: 100%;
             height: auto;
 
@@ -41,45 +41,41 @@
 </head>
 
 <body>
-    <div class="main-logo">
-        <h1>학선이의 블로그에 오신 것을 환영합니다.</h1>
+    <div class="signup-logo">
+        <h1>My Blog 회원가입</h1>
     </div>
-    <div class="login-form">
-        <table id="tblLogin" border="1">
+    <div class="signup-form">
+        <table border="1">
             <tr>
                 <td>ID</td>
                 <td><input type="text" id="ipLoginId"></td>
+            </tr>
+            <tr>
+                <td>NickName</td>
+                <td><input type="text" id="ipNickName"></td>
             </tr>
             <tr>
                 <td>PW</td>
                 <td><input type="password" id="ipPassword"></td>
             </tr>
             <tr>
+                <td>Valid Pw</td>
+                <td><input type="password" id="ipValidPassword"></td>
+            </tr>
+            <tr>
                 <td colspan="2" align="center">
-                    <button onclick="requestLogin($('#ipLoginId').val(), $('#ipPassword').val())">로그인</button>
-                    <button onclick="window.location.href='/signup.html'">회원가입</button>
+                    <button onclick="requestSignUpUser($('#ipLoginId').val(), $('#ipNickName').val(), $('#ipPassword').val(), $('#ipValidPassword').val())">가입완료</button>
+                    <button onclick="window.location.href='/index.html'">취소</button>
                 </td>
-                <!-- <td>
-                    <button>회원가입</button>
-                </td> -->
             </tr>
         </table>
     </div>
 
     <script src="/api.js"></script>
     <script>
-        // $(document).ready(function () {
-        //     requestBoardList(value => {
-        //         for(let i = 0; i < value.length; i++){
-        //             let temp_html = `<tr>
-        //                                 <td><a href='#' onclick="window.location.href='/board_detail.html?boardId=${value[i]['_id']}'">${value[i]['title']}</a></td>
-        //                                 <td>${value[i]['regid']}</td>
-        //                                 <td>${value[i]['regdt']}</td>
-        //                             </tr>`;
-        //             $('#tblBoard').append(temp_html);
-        //         }
-        //     })
-        // });
+        $(document).ready(function () {
+            
+        });
     </script>
 </body>
 
