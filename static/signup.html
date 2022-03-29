@@ -74,7 +74,14 @@
     <script src="/api.js"></script>
     <script>
         $(document).ready(function () {
-            
+            // 이미 로그인이 되어있는 상태라면, 토큰이 유효한지 검사한다.
+            // 토큰이 유효한 상태라면, 메시지를 보여주고 index 페이지로 넘어간다.
+            if(localStorage.getItem('token')){
+                tokenCheck(function(){
+                    alert('이미 로그인 되어있습니다.\n게시판 목록 페이지로 이동합니다.');
+                    window.location.href='/';
+                });
+            }
         });
     </script>
 </body>

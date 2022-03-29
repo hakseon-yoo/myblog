@@ -48,7 +48,26 @@
     </div>
     <input type="hidden" id="ipBoardId">
     <div align="center">
-        <button onclick="window.location.href='/board_list.html'">돌아가기</button>
+        <button onclick="window.location.href='/'">돌아가기</button>
+    </div>
+
+    <div align="center">
+        <table border="1">
+            <tr>
+                <td>댓글작성</td>
+                <td>
+                    <textarea id="taComment"></textarea>
+                </td>
+                <td>
+                    <button id="btnSaveComment" 
+                    onclick="requestSaveComment(getParameter('boardId'), $('#taComment').val())">작성하기</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div align="center">
+        <table id="tblComment"></table>
     </div>
 
     <script src="/api.js"></script>
@@ -61,14 +80,86 @@
             return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         }
 
+        function showCommentUpdate(commentId){
+            $('#comment_'+commentId).hide();
+            $('#commentUpdate_'+commentId).show();
+            $('#btnCommentUpdate_'+commentId).hide();
+        }
+
+        function hideCommentUpdate(commentId){
+            $('#comment_'+commentId).show();
+            $('#commentUpdate_'+commentId).hide();
+            $('#btnCommentUpdate_'+commentId).show();
+        }
+
         $(document).ready(function () {
-            requestBoardDetail(getParameter("boardId"), (response) => {
+
+            let boardId = getParameter('boardId');
+            
+
+            requestBoardDetail(boardId, (response) => {
                 $('#lbTitle').text(response.title);
                 $('#lbRegId').text(response.regid);
                 $('#lbRegDt').text(response.regdt);
                 $('#taContent').text(response.content);
                 $('#ipBoardId').val(response._id);
             })
+
+            if(localStorage.getItem('token')){ // 로그인한 상태
+                tokenCheck((u) => {
+                    requestSelectComment(boardId, (response) => {
+                        
+                        for(let i = 0; i < response.length; i++){
+                            let temp_html;
+
+                            let userIds = response[i]['userId'];
+                            let commentId = response[i]['commentId'];
+                            let comment = response[i]['comment'];
+                            let regdt = response[i]['regdt'];
+
+                            
+                            if(u.userId === userIds){
+                                temp_html = `<tr>
+                                                    <td>${userIds}</td>
+                                                    <td id="comment_${commentId}">${comment}</td>
+                                                    <td id="commentUpdate_${commentId}">
+                                                        <input type="text" id="ipUpdateComment_${commentId}" value="${comment}">
+                                                        <button onclick="requestUpdateComment('${boardId}', ${commentId})">수정</button>
+                                                        <button onclick="hideCommentUpdate(${commentId})">취소</button>
+                                                    </td>
+                                                    <td>${regdt}</td>
+                                                    <td><button id="btnCommentUpdate_${commentId}" onclick="showCommentUpdate(${commentId})">수정</button></td>
+                                                    <td><button onclick="requestDeleteComment('${boardId}', ${commentId})">삭제</button></td>
+                                                </tr>`;
+                            }else{
+                                temp_html = `<tr>
+                                                    <td>${userIds}</td>
+                                                    <td>${comment}</td>
+                                                    <td>${regdt}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>`;
+                            }
+                            $('#tblComment').append(temp_html);
+                            $('#commentUpdate_'+commentId).hide();
+                        }
+                    });
+                });
+            }else{ // 로그인하지 않은 상태
+                requestSelectComment(boardId, (response) => {
+                    for(let i = 0; i < response.length; i++){
+                        let temp_html = `<tr>
+                                            <td>${response[i]['userId']}</td>
+                                            <td>${response[i]['comment']}</td>
+                                            <td>${response[i]['regdt']}</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>`
+                        $('#tblComment').append(temp_html);
+                    }
+                });
+            }
+            
 
             $("#btnUpdate").on("click", function () {
                 window.location.href = `/board_update.html?boardId=${ $('#ipBoardId').val() }`

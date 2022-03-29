@@ -9,6 +9,7 @@ connect();
 const boardsRouter = require('./routes/boards');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
+const commentRouter = require('./routes/comments');
 
 const requestMiddleware = (req, res, next) => {
     console.log("Request URL:", req.originalUrl, " - ", new Date());
@@ -23,7 +24,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true})); // 클라이언트에서 Ajax로 요청할 때, 얘 없으면 body를 안받아버린다;
 app.use(requestMiddleware);
 
-app.use('/api', [boardsRouter, usersRouter, authRouter]);
+app.use('/api', [
+    boardsRouter,   // 게시판
+    usersRouter,    // 회원가입
+    authRouter,     // 로그인 및 토큰검사
+    commentRouter   // 게시판 댓글
+]);
 
 // app.get('/good', async (req, res) => {
 //     const [board_list] = await Board.find({});

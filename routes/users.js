@@ -1,7 +1,10 @@
 const express = require('express');
+const Joi = require('joi');
 const router = express.Router();
 
 const User = require('../schemas/user');
+
+const signupMiddleware = require('../middlewares/signup-middleware');
 
 const sanitizehtml = require('sanitize-html');
 
@@ -17,11 +20,12 @@ const sanitizehtml = require('sanitize-html');
  * request : userId, nickname, password, validpassword
  * response : -
  */
-router.post('/user', async (req, res) => {
-    const {userId, nickname, password, validpassword} = req.body;
-    // console.log(userId, nickname, password, validpassword);
+router.post('/user', signupMiddleware, async (req, res) => {
 
-    // 1. 클라이언트에서 받아온 필수정보 null check
+    // 1. 클라이언트에서 받아온 null & valid check
+    // signupMiddleware를 통해 검사했다. 미들웨어에서 오류가 났다면 여기까지 들어올 일이 없다.
+    // req.body는 검증이 끝났다고 봐도 된다.
+    const {userId, nickname, password, validpassword} = req.body;
 
     // 2. userId, nickname 기존재여부 체크
     const user = await User.find({
@@ -30,7 +34,6 @@ router.post('/user', async (req, res) => {
             {nickname: nickname}
         ]
     });
-    console.log(user.length);
     if(user.length){
         res.status(400).send({
             errorMessage: '이미 가입된 이메일 또는 닉네임이 있습니다.',

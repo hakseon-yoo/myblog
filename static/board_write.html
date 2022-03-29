@@ -42,7 +42,7 @@
     </div>
     <div align="center">
         <button id="btnSave">저장하기</button>
-        <button onclick="window.location.href='/board_list.html'">취소</button>
+        <button onclick="window.location.href='/'">취소</button>
     </div>
 
     <script src="/api.js"></script>
@@ -58,7 +58,7 @@
                 requestBoardWrite($('#ipTitle').val(), $('#ipRegId').val(), $('#ipPassword').val(), $('#taContent').val(), (response) => {
                     if(response.success === true){
                         alert('게시글이 작성되었습니다.');
-                        window.location.href = "/board_list.html";
+                        window.location.href = "/";
                     }else{
                         alert(response.msg);
                     }

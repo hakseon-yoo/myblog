@@ -45,7 +45,7 @@
     </div>
     <div align="center">
         <button id="btnSave">수정하기</button>
-        <button onclick="window.location.href='/board_list.html'">돌아가기</button>
+        <button onclick="window.location.href='/'">돌아가기</button>
     </div>
 
     <script src="/api.js"></script>
@@ -75,7 +75,7 @@
                 requestBoardUpdate($('#ipTitle').val(), $('#ipRegId').val(), $('#ipPassword').val(), $('#taContent').val(), getParameter("boardId"), (response) => {
                     if(response.success === true){
                         alert('게시글이 수정되었습니다.');
-                        window.location.href = "/board_list.html";
+                        window.location.href = "/";
                     }else{
                         alert(response.msg);
                     }
@@ -86,7 +86,7 @@
                 requestBoardDelete(getParameter("boardId"), $('#ipPassword').val(), (response) => {
                     if(response.success === true){
                         alert('게시글이 삭제되었습니다.');
-                        window.location.href = "/index.html";
+                        window.location.href = "/";
                     }else{
                         alert(response.msg);
                     }
