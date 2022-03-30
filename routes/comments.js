@@ -7,6 +7,14 @@ const sanitizehtml = require('sanitize-html');
 router.post('/comment', async (req, res) => {
     const {boardId, userId, comment} = req.body;
 
+    const sanitizeboardId = sanitizehtml(boardId);
+    const sanitizeuserId = sanitizehtml(userId);
+    const sanitizecomment = sanitizehtml(comment);
+
+    if(!sanitizeboardId.length) return res.status(400).send({errorMessage: '유효하지 않은 boardId 입니다.'});
+    if(!sanitizeuserId.length) return res.status(400).send({errorMessage: '유효하지 않은 userId 입니다.'});
+    if(!sanitizecomment.length) return res.status(400).send({errorMessage: '댓글이 입력되지 않았거나, 올바르지 않습니다.'});
+
     let commentId = 1;
     const maxOrderComment = await Comment.findOne().sort('-commentId');
     if(maxOrderComment) commentId = maxOrderComment.commentId + 1;
@@ -15,9 +23,9 @@ router.post('/comment', async (req, res) => {
 
     await Comment.create({
         commentId: commentId,
-        boardId: boardId,
-        userId: userId,
-        comment: comment,
+        boardId: sanitizeboardId,
+        userId: sanitizeuserId,
+        comment: sanitizecomment,
         regdt: regdt,
     });
 
@@ -27,6 +35,14 @@ router.post('/comment', async (req, res) => {
 router.put('/comment', async (req, res) => {
     const {boardId, commentId, comment} = req.body;
 
+    const sanitizeboardId = sanitizehtml(boardId);
+    const sanitizecommentId = sanitizehtml(commentId);
+    const sanitizecomment = sanitizehtml(comment);
+
+    if(!sanitizeboardId.length) return res.status(400).send({errorMessage: '유효하지 않은 boardId 입니다.'});
+    if(!sanitizecommentId.length) return res.status(400).send({errorMessage: '유효하지 않은 commentId 입니다.'});
+    if(!sanitizecomment.length) return res.status(400).send({errorMessage: '댓글이 입력되지 않았거나, 올바르지 않습니다.'});
+
     const validComment = await Comment.findOne({ boardId, commentId });
     // console.log([validComment].length);
     if(![validComment].length){
@@ -35,7 +51,7 @@ router.put('/comment', async (req, res) => {
         });
     }
 
-    await Comment.updateOne({boardId: boardId, commentId: commentId}, {$set: {comment: comment} });
+    await Comment.updateOne({boardId: sanitizeboardId, commentId: sanitizecommentId}, {$set: {comment: sanitizecomment} });
     res.send('댓글수정성공');
 });
 

@@ -7,68 +7,95 @@
 
     <title>My Blog - 게시글 상세</title>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.js"
-        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
-        integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-    <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
+    <link href="/css/reset.css" rel="stylesheet" />
+    <link href="/css/style.css" rel="stylesheet" />
 
+    <!-- 부트스트랩 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- 구글 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div align="center" >
-        <table border="1">
-            <tr>
-                <td colspan="2" align="right">
-                    <button id="btnUpdate">수정하기</button>
-                    <!-- <button id="btnDelete">삭제하기</button> -->
-                </td>
-            </tr>
-            <tr>
-                <td>제목 : </td>
-                <td><label id="lbTitle"></label></td>
-            </tr>
-            <tr>
-                <td>작성자 : </td>
-                <td><label id="lbRegId"></label></td>
-            </tr>
-            <tr>
-                <td>작성일자 : </td>
-                <td><label id="lbRegDt"></label></td>
-            </tr>
-            <tr>
-                <td>글 내용 : </td>
-                <td><textarea style="width: 500px; height: 200px;" id="taContent" readonly></textarea></td>
-            </tr>
-        </table>
-    </div>
-    <input type="hidden" id="ipBoardId">
-    <div align="center">
-        <button onclick="window.location.href='/'">돌아가기</button>
-    </div>
+    <div class="background">
+        <div class="wrap-section">
 
-    <div align="center">
-        <table border="1">
-            <tr>
-                <td>댓글작성</td>
-                <td>
-                    <textarea id="taComment"></textarea>
-                </td>
-                <td>
-                    <button id="btnSaveComment" 
-                    onclick="requestSaveComment(getParameter('boardId'), $('#taComment').val())">작성하기</button>
-                </td>
-            </tr>
-        </table>
-    </div>
+            <nav class="navbar navbar-expand-lg navbar-light bg-dark mb-5">
+                <div class="container-fluid">
+                    <a class="navbar-brand text-white" href="/">
+                        <img src="/img/duck.jpg" alt="" width="30" height="30"> 
+                        My Blog
+                    </a>
+                    <span id="spWelcomeMessage" class="navbar-text text-white"> Navbar text with an inline element </span>
+                </div>
+                <div class="nav justify-content-end nav-pills me-3">
+                    <button class="btn btn-outline-light nav-item" id="btnLogin" onclick="window.location.href='/login.html'">Login</button>
+                    <button class="btn btn-outline-light nav-item" id="btnLogout" onclick="LogOut()">Logout</button>
+                </div>
+            </nav>
 
-    <div align="center">
-        <table id="tblComment"></table>
-    </div>
+            <div class="mb-3" style="text-align: right;">
+                <button class="btn btn-outline-light" id="btnUpdate">글 수정</button>
+                <button class="btn btn-outline-light" onclick="window.location.href='/'">글 목록</button>
+            </div>
+            <div class="object-center-align">
+                <!-- 여기가 시작 -->
+                <div class="mb-5" style="width: 100%;">
+                    <table class="table table-dark">
+                        <content id="lbTitle" class="text-white fs-3 fw-bold">글 상세</content>
+                        <!-- <tr>
+                            <td class="text-center text-white" style="width: 10%;">제목 : </td>
+                            <td class="text-white"><label id="lbTitle"></label></td>
+                        </tr> -->
+                        <tr>
+                            <td class="text-center text-white" style="width: 10%;">작성자 : </td>
+                            <td class="text-white"><label id="lbRegId"></label></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center text-white">작성일자 : </td>
+                            <td class="text-white"><label id="lbRegDt"></label></td>
+                        </tr>
+                        <tr>
+                            <!-- <td class="text-center text-white text-middle">글 내용 : </td> -->
+                            <td class="text-center text-white align-middle">글 내용 : </td>
+                            <td class="text-white" id="taContent" style="white-space:pre;"></td>
+                        </tr>
+                    </table>
+                </div>
+                <input type="hidden" id="ipBoardId">
+                <!-- <div class="form-floating">
+                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+                    <label for="floatingTextarea">Comments</label>
+                </div> -->
+                <div class="form-floating" style="width: 100%;">
+                    <table class="table table-dark">
+                        <content class="text-white fs-4">댓글</content>
+                        <tr>
+                            <td>
+                                <div class="input-group mb-3">
+                                    <input id="ipComment" type="text" class="form-control" placeholder="댓글을 입력하세요." aria-label="Recipient's username" aria-describedby="btnSaveComment">
+                                    <button class="btn btn-outline-light" type="button" id="btnSaveComment" onclick="requestSaveComment(getParameter('boardId'), $('#ipComment').val())">등록</button>
+                                </div>
+                            </td>
+                            <!-- <td>
+                                <button id="btnSaveComment" class="btn btn-outline-light"
+                                onclick="requestSaveComment(getParameter('boardId'), $('#taComment').val())">등록</button>
+                            </td> -->
+                        </tr>
+                    </table>
+                </div>
+            
+                <div style="width: 100%;">
+                    <table class="table table-dark" id="tblComment"></table>
+                </div>
+                <!-- 여기가 끝 -->
+            </div>
+        </div>
+    </div> 
 
     <script src="/api.js"></script>
     <script>
@@ -95,6 +122,17 @@
         $(document).ready(function () {
 
             let boardId = getParameter('boardId');
+
+            //로그인 상태라면, 로그아웃 버튼을 보여주고 로그인되지 않은 상태라면 로그인 버튼을 보여준다.
+            if(localStorage.getItem('token')){
+                $('#spWelcomeMessage').text(localStorage.getItem('userId') + '님 환영합니다.');
+                $('#btnLogin').hide();
+                $('#btnLogout').show();
+            }else{
+                $('#spWelcomeMessage').text('');
+                $('#btnLogin').show();
+                $('#btnLogout').hide();
+            }
             
 
             requestBoardDetail(boardId, (response) => {
@@ -120,24 +158,25 @@
                             
                             if(u.userId === userIds){
                                 temp_html = `<tr>
-                                                    <td>${userIds}</td>
-                                                    <td id="comment_${commentId}">${comment}</td>
-                                                    <td id="commentUpdate_${commentId}">
-                                                        <input type="text" id="ipUpdateComment_${commentId}" value="${comment}">
-                                                        <button onclick="requestUpdateComment('${boardId}', ${commentId})">수정</button>
-                                                        <button onclick="hideCommentUpdate(${commentId})">취소</button>
+                                                    <td class="align-middle" height="50px" width="20%">${userIds}</td>
+                                                    <td class="align-middle" id="comment_${commentId}">${comment}</td>
+                                                    <td class="align-middle" id="commentUpdate_${commentId}">
+                                                        <input class="bg-white" type="text" id="ipUpdateComment_${commentId}" value="${comment}">
+                                                        <button class="btn btn-outline-light" onclick="requestUpdateComment('${boardId}', ${commentId})">수정</button>
+                                                        <button class="btn btn-outline-light" onclick="hideCommentUpdate(${commentId})">취소</button>
                                                     </td>
-                                                    <td>${regdt}</td>
-                                                    <td><button id="btnCommentUpdate_${commentId}" onclick="showCommentUpdate(${commentId})">수정</button></td>
-                                                    <td><button onclick="requestDeleteComment('${boardId}', ${commentId})">삭제</button></td>
+                                                    <td class="align-middle" width="160px">${regdt}</td>
+                                                    <td class="align-middle" width="100px">
+                                                        <button class="btn btn-outline-light" id="btnCommentUpdate_${commentId}" onclick="showCommentUpdate(${commentId})">수정</button>
+                                                        <button class="btn btn-outline-light" onclick="requestDeleteComment('${boardId}', ${commentId})">삭제</button>
+                                                    </td>
                                                 </tr>`;
                             }else{
                                 temp_html = `<tr>
-                                                    <td>${userIds}</td>
-                                                    <td>${comment}</td>
-                                                    <td>${regdt}</td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td class="align-middle" height="60px" width="20%">${userIds}</td>
+                                                    <td class="align-middle">${comment}</td>
+                                                    <td class="align-middle" width="160px">${regdt}</td>
+                                                    <td class="align-middle" width="100px"></td>
                                                 </tr>`;
                             }
                             $('#tblComment').append(temp_html);
@@ -149,11 +188,10 @@
                 requestSelectComment(boardId, (response) => {
                     for(let i = 0; i < response.length; i++){
                         let temp_html = `<tr>
-                                            <td>${response[i]['userId']}</td>
-                                            <td>${response[i]['comment']}</td>
-                                            <td>${response[i]['regdt']}</td>
-                                            <td></td>
-                                            <td></td>
+                                            <td class="align-middle" height="60px" width="20%">${response[i]['userId']}</td>
+                                            <td class="align-middle">${response[i]['comment']}</td>
+                                            <td class="align-middle" width="160px">${response[i]['regdt']}</td>
+                                            <td class="align-middle" width="100px"></td>
                                         </tr>`
                         $('#tblComment').append(temp_html);
                     }

@@ -36,7 +36,7 @@ router.post('/auth', async (req, res) => {
     }
     //토큰발급 후 클라이언트에 토근과 함께 성공처리를 내려준다.
     const token = jwt.sign({ userId: user.userId }, "MYBLOG");
-    res.send({ token });
+    res.send({ token, userId });
 });
 
 /**

@@ -123,9 +123,6 @@ function LogOut() {
     window.location.href = "/";
 }
 
-/**
- * 
- */
 function requestSignUpUser(userId, nickname, password, validpassword){
     $.ajax({
         type: "POST",
@@ -156,6 +153,7 @@ function requestLogin(userId, password){
         },
         success: function (response) {
             localStorage.setItem("token", response.token);
+            localStorage.setItem("userId", response.userId);
             window.location.href = '/';
         },
         error: function (error) {
@@ -186,9 +184,6 @@ function tokenCheck(callback){
     });
 }
 
-
-
-
 function requestBoardList(callback) {
     $.ajax({
         type: "GET",
@@ -200,14 +195,6 @@ function requestBoardList(callback) {
 }
 
 function requestBoardWrite(title, regid, password, content, callback){
-    /**
-     * 파라미터 정보
-     *  - title : 게시글 제목(필수 값)
-     *  - regid : 작성자(필수 값)
-     *  - password : 해당 게시글의 패스워드(필수 값)
-     *  - content : 글 내용(필수 값)
-     */
-    
     $.ajax({
         type: "POST",
         url: "/api/board",
