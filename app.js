@@ -1,6 +1,7 @@
 const express = require('express');
 const connect = require('./schemas');
 require('dotenv').config();
+const cors = require('cors');
 const app = express();
 const port = 3000;
 
@@ -19,6 +20,7 @@ const requestMiddleware = (req, res, next) => {
     next();
 }
 
+app.use(cors());
 app.use(express.static('static')); // html 파일과 연결시켜주는 미들웨어 인 것 같다. 자동으로 index.html을 연결시켜주는 것 같다.
 app.use(express.json());
 app.use(express.urlencoded({ extended: true})); // 클라이언트에서 Ajax로 요청할 때, 얘 없으면 body를 안받아버린다;
