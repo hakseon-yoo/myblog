@@ -211,6 +211,7 @@ function requestBoardWrite(title, regid, password, content, callback){
 }
 
 function requestBoardDetail(boardId, callback){
+    alert(1);
     $.ajax({
         type: "GET",
         url: "/api/boarddetail",

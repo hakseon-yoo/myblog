@@ -21,7 +21,8 @@ const sanitizehtml = require('sanitize-html');
  * response : -
  */
 router.post('/user', signupMiddleware, async (req, res) => {
-
+    // #swagger.tags = ['User']
+    // #swagger.description = '진짜 이거 되면 대박인데'
     // 1. 클라이언트에서 받아온 null & valid check
     // signupMiddleware를 통해 검사했다. 미들웨어에서 오류가 났다면 여기까지 들어올 일이 없다.
     // req.body는 검증이 끝났다고 봐도 된다.
